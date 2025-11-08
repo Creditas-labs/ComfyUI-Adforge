@@ -6,10 +6,12 @@ repos:
     hooks:
       - id: uv-export-locked
         name: Export requirements.txt from lockfile
-        entry: bash -c 'uv export --no-cache --no-dev --locked > requirements.txt && git add requirements.txt'
-        language: system
+        entry: bash -lc 'uv export --no-cache --no-dev --locked > requirements.txt && git add requirements.txt'
+        language: script
         pass_filenames: false
         stages: [ commit ]
+        always_run: true
+
 
       - id: black
         name: Format with Black
