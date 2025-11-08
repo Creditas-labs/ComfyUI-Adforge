@@ -20,7 +20,7 @@ Creditas' Ad Creation Toolkit for ComfyUI
 1. Make sure you have [uv](https://docs.astral.sh/uv/reference/installer/#__tabbed_1_1) installed
 2. Install dev dependencies:
 ```shell
-make install-dev
+make init
 ```
 
 ## Writing custom nodes
