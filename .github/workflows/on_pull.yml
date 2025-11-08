@@ -8,16 +8,16 @@ on:
       - "uv.lock"
       - "pyproject.toml"
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    env:
-      PYTHONIOENCODING: "utf8"
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.12"]
-
+  check-app:
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
