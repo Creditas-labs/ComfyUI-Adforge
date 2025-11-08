@@ -1,4 +1,4 @@
-"""Top-level package for adforge."""
+"""Top-level package for comfyui-adforge."""
 
 __all__ = [
     "NODE_CLASS_MAPPINGS",

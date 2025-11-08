@@ -1,61 +1,6 @@
 version = 1
 revision = 3
-requires-python = ">=3.10"
-
-[[package]]
-name = "adforge"
-version = "0.0.1"
-source = { editable = "." }
-dependencies = [
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "autoflake" },
-    { name = "black" },
-    { name = "flake8" },
-    { name = "flake8-pyproject" },
-    { name = "isort" },
-    { name = "pre-commit" },
-    { name = "pytest-cov" },
-]
-lint = [
-    { name = "autoflake" },
-    { name = "black" },
-    { name = "flake8" },
-    { name = "flake8-pyproject" },
-    { name = "isort" },
-    { name = "mypy" },
-    { name = "pre-commit" },
-]
-test = [
-    { name = "pytest-cov" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "mypy", specifier = ">=1.11" }]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "autoflake", specifier = "==2.3.1" },
-    { name = "black", specifier = "==25.9.0" },
-    { name = "flake8", specifier = "==7.3.0" },
-    { name = "flake8-pyproject", specifier = "==1.2.3" },
-    { name = "isort", specifier = "==7.0.0" },
-    { name = "mypy" },
-    { name = "pre-commit", specifier = "==4.3.0" },
-    { name = "pytest-cov", specifier = "==7.0.0" },
-]
-lint = [
-    { name = "autoflake", specifier = "==2.3.1" },
-    { name = "black", specifier = "==25.9.0" },
-    { name = "flake8", specifier = "==7.3.0" },
-    { name = "flake8-pyproject", specifier = "==1.2.3" },
-    { name = "isort", specifier = "==7.0.0" },
-    { name = "mypy" },
-    { name = "pre-commit", specifier = "==4.3.0" },
-]
-test = [{ name = "pytest-cov", specifier = "==7.0.0" }]
+requires-python = ">=3.12"
 
 [[package]]
 name = "autoflake"
@@ -63,7 +8,6 @@ version = "2.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyflakes" },
-    { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/2a/cb/486f912d6171bc5748c311a2984a301f4e2d054833a1da78485866c71522/autoflake-2.3.1.tar.gz", hash = "sha256:c98b75dc5b0a86459c4f01a1d32ac7eb4338ec4317a4469515ff1e687ecd909e", size = 27642, upload-time = "2024-03-13T03:41:28.977Z" }
 wheels = [
@@ -134,6 +78,59 @@ sdist = { url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
 ]
+
+[[package]]
+name = "comfyui-adforge"
+version = "0.0.1"
+source = { editable = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "autoflake" },
+    { name = "black" },
+    { name = "flake8" },
+    { name = "flake8-pyproject" },
+    { name = "isort" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest-cov" },
+]
+lint = [
+    { name = "autoflake" },
+    { name = "black" },
+    { name = "flake8" },
+    { name = "flake8-pyproject" },
+    { name = "isort" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+]
+test = [
+    { name = "pytest-cov" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "autoflake", specifier = "==2.3.1" },
+    { name = "black", specifier = "==25.9.0" },
+    { name = "flake8", specifier = "==7.3.0" },
+    { name = "flake8-pyproject", specifier = "==1.2.3" },
+    { name = "isort", specifier = "==7.0.0" },
+    { name = "mypy" },
+    { name = "pre-commit", specifier = "==4.4.0" },
+    { name = "pytest-cov", specifier = "==7.0.0" },
+]
+lint = [
+    { name = "autoflake", specifier = "==2.3.1" },
+    { name = "black", specifier = "==25.9.0" },
+    { name = "flake8", specifier = "==7.3.0" },
+    { name = "flake8-pyproject", specifier = "==1.2.3" },
+    { name = "isort", specifier = "==7.0.0" },
+    { name = "mypy" },
+    { name = "pre-commit", specifier = "==4.4.0" },
+]
+test = [{ name = "pytest-cov", specifier = "==7.0.0" }]
 
 [[package]]
 name = "coverage"

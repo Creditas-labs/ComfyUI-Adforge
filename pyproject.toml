@@ -3,18 +3,17 @@ requires = ["setuptools>=70.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "adforge"
+name = "comfyui-adforge"
 version = "0.0.1"
 description = "Creditas' Ad Creation Toolkit for ComfyUI"
 authors = [
-  {name = "Creditas-labs", email = "martech1@creditas.com"}
+  {name = "Creditas", email = "martech1@creditas.com"}
 ]
 readme = "README.md"
 license = {text = "GNU General Public License v3"}
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 classifiers = []
 dependencies = [
-    "mypy>=1.11",
 ]
 
 
@@ -33,7 +32,7 @@ lint = [
   "autoflake ==2.3.1",
   "black ==25.9.0",
   "isort ==7.0.0",
-  "pre-commit ==4.3.0"
+  "pre-commit ==4.4.0"
 ]
 
 

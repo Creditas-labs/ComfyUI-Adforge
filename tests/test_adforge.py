@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Tests for `adforge` package."""
+"""Tests for `comfyui-adforge` package."""
 
 import pytest
 
