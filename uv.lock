@@ -172,7 +172,7 @@ wheels = [
 ]
 
 [[package]]
-name = "comfyui_adforge"
+name = "comfyui-adforge"
 version = "0.0.1"
 source = { editable = "." }
 dependencies = [
@@ -191,6 +191,7 @@ dev = [
     { name = "isort" },
     { name = "mypy" },
     { name = "pre-commit" },
+    { name = "pytest" },
     { name = "pytest-cov" },
 ]
 lint = [
@@ -203,6 +204,7 @@ lint = [
     { name = "pre-commit" },
 ]
 test = [
+    { name = "pytest" },
     { name = "pytest-cov" },
 ]
 
@@ -223,6 +225,7 @@ dev = [
     { name = "isort", specifier = "==7.0.0" },
     { name = "mypy" },
     { name = "pre-commit", specifier = "==4.4.0" },
+    { name = "pytest", specifier = "==9.0.0" },
     { name = "pytest-cov", specifier = "==7.0.0" },
 ]
 lint = [
@@ -234,7 +237,10 @@ lint = [
     { name = "mypy" },
     { name = "pre-commit", specifier = "==4.4.0" },
 ]
-test = [{ name = "pytest-cov", specifier = "==7.0.0" }]
+test = [
+    { name = "pytest", specifier = "==9.0.0" },
+    { name = "pytest-cov", specifier = "==7.0.0" },
+]
 
 [[package]]
 name = "coverage"

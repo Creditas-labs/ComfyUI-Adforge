@@ -26,6 +26,7 @@ dev = [
   {include-group = "test"}
 ]
 test = [
+  "pytest==9.0.0",
   "pytest-cov ==7.0.0"
 ]
 lint = [
@@ -61,7 +62,7 @@ includes = []
 "*" = ["*.*"]
 
 [tool.pytest.ini_options]
-minversion = "8.0"
+minversion = "9.0.0"
 testpaths = [
     "tests",
 ]

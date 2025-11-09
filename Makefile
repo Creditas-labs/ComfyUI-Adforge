@@ -1,6 +1,6 @@
 .PHONY: help install install-dev test lint format clean deploy export-requirements
 
-# Default ComfyUI Data path - can be overridden with: make deploy COMFYUI_PATH=/path/to/ComfyUI
+# Default ComfyUI Data path - can be overridden with: make deploy COMFYUI_DATA_PATH=/path/to/ComfyUI
 COMFYUI_DATA_PATH ?= $(HOME)/ComfyUI
 
 help: ## Show this help message
@@ -40,7 +40,7 @@ export-requirements: ## Export dependencies to requirements.txt for pip compatib
 	@echo "Dependencies exported to requirements.txt"
 
 test: ## Run tests
-	@uv run pytest -vvv .
+	@uv run pytest -vvv
 
 test-coverage: ## Run tests with coverage report
 	@uv run pytest -v --cov=src --cov-report=html --cov-report=term
