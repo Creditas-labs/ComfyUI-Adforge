@@ -36,7 +36,6 @@ def create_documentation(title, short_description, sections):
 
 CONFIGURATION = {
     "aspect_ratio": "Optional. Specifies the aspect ratio of generated videos.",
-    "compression_quality": "Optional. Specifies the compression quality of the generated videos.",
     "duration_seconds": "Required. The length in seconds of video files that you want to generate.",
     "enhance_prompt": "Optional. Use Gemini to enhance your prompts.",
     "generate_audio": "Generate audio for the video.",
@@ -49,18 +48,13 @@ CONFIGURATION = {
         "number with your request without changing other parameters will cause the model to "
         "produce the same videos."
     ),
-    "output_format": (
-        "Some videos are too large to be returned directly. Try reducing compression quality to optimized first. "
-        "Choose whether to get "
-        "a GCS URI or save locally, when you choose one the other output will be None."
-    ),
     "output_gcs_uri": (
         "GCS URI where the generated videos will be stored, in the format " "'gs://BUCKET_NAME/SUBDIRECTORY'."
     ),
     "model": "The Veo model to use for video generation.",
     "fps": "Optional. Frames per second for the generated video.",
     "number_of_videos": "Optional. Number of video variations to generate.",
-    "image_mime_type": "Mime type of the input image, e.g., 'image/png' or 'image/jpeg'.",
+    "mime_type": "Mime type of the input image or video, e.g., 'image/png' or 'video/mp4'.",
 }
 # "resizeMode": (
 #     "Optional. Veo 3 models only, used with image for image-to-video. The resize "
@@ -69,7 +63,7 @@ CONFIGURATION = {
 # ),
 
 OUTPUTS = {
-    "output_gcs_uri_list": "A list of GCS URIs of the generated videos (when output_format=gcs_uri).",
+    "output_videos": "A list of generated videos (VIDEO type).",
     "output_video_path_list": "A list of local paths to the generated videos (when output_format=local_file)",
 }
 
@@ -93,6 +87,10 @@ INPUTS = {
     "first_frame": (
         "Image to use as the first frame of generated videos. Only supported for image " "to video use cases."
     ),
+    "reference_type": "Asset image: You provide up to three images of a single person, character, or product. "
+    "Veo preserves the subject's appearance in the output video. Style image: You provide a single style image.  "
+    "Veo applies the style from your uploaded image in the output video. This feature "
+    "is only supported by veo-2.0-generate-exp in Preview.",
 }
 
 TOOLTIPS = {
@@ -130,6 +128,18 @@ DOCUMENTATION = {
             "Inputs": {
                 "prompt": get_tooltip("prompt"),
                 "negative_prompt": get_tooltip("negative_prompt"),
+            },
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
+        },
+    ),
+    "VertexVeoVideoWithReferenceNode": create_documentation(
+        "Video with Reference",
+        "Generate videos using a reference image for style guidance with Google's Veo.",
+        {
+            "Inputs": {
+                "prompt": get_tooltip("prompt"),
+                "reference_image": "The image to use as a reference for content or style.",
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,

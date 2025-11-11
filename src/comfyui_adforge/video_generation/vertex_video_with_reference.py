@@ -1,59 +1,59 @@
 """
-Video to Video Node for ComfyUI
+Video with Reference Node for ComfyUI
 
-Modify existing videos using text prompts with Google GenAI SDK.
+Generate videos using a reference image for style guidance with Google GenAI SDK.
 """
 
 from typing import Optional
 
-from comfy_api.latest import IO, VideoInput, ui
-from google.genai.types import GenerateVideosConfig, GenerateVideosSource, Video
+from comfy_api.latest import IO, ImageInput, ui
+from google.genai.types import (
+    GenerateVideosConfig,
+    GenerateVideosSource,
+    Image,
+    VideoGenerationReferenceImage,
+    VideoGenerationReferenceType,
+)
 
-from comfyui_adforge import settings, utils
-from comfyui_adforge.documentation import get_documentation, get_tooltip
+from .. import settings, utils
+from ..documentation import get_documentation, get_tooltip
 
 
-class VertexVeoVideoToVideoNode(IO.ComfyNode):
+class VertexVeoVideoWithReferenceNode(IO.ComfyNode):
     """
-    Modify an existing video using a text prompt with Google Veo 2 model.
-    Use this to extend videos.
+    Generate a video using a reference image for style or content guidance.
     """
 
     @classmethod
-    def define_schema(cls):
+    def define_schema(cls) -> IO.Schema:
         """Define input parameters for the node."""
         return IO.Schema(
-            node_id="VertexVeoVideoToVideoNode",
-            display_name="Vertex Veo Video to Video",
+            node_id="VertexVeoVideoWithReferenceNode",
+            display_name="Vertex Veo Video with Reference",
             category="AdForge/Video Generation",
-            description=get_documentation("VertexVeoVideoToVideoNode"),
+            description=get_documentation("VertexVeoVideoWithReferenceNode"),
             inputs=[
+                IO.String.Input("prompt", tooltip=get_tooltip("prompt"), force_input=True),
+                IO.Image.Input("reference_image", tooltip=get_tooltip("reference_image"), optional=True),
                 IO.String.Input(
-                    "prompt",
-                    tooltip=get_tooltip("prompt"),
-                    force_input=True,
+                    "reference_image_gcs_uri",
+                    placeholder=settings.get_default_gcs_uri("reference.png"),
+                    tooltip=get_tooltip("reference_image_gcs_uri"),
+                    optional=True,
                 ),
-                IO.Video.Input(
-                    "video",
-                    tooltip=get_tooltip("video"),
+                IO.Combo.Input(
+                    "reference_type",
+                    options=settings.ReferenceType.options(),
+                    default=settings.ReferenceType.default(),
+                    tooltip=get_tooltip("reference_type"),
                     optional=True,
                 ),
                 IO.String.Input(
-                    "input_video_path",
-                    placeholder="/path/to/video.mp4",
-                    tooltip=get_tooltip("input_video_path"),
-                    optional=True,
-                ),
-                # --- Optional ---
-                IO.String.Input(
-                    "negative_prompt",
-                    tooltip=get_tooltip("negative_prompt"),
-                    optional=True,
-                    force_input=True,
+                    "negative_prompt", tooltip=get_tooltip("negative_prompt"), optional=True, force_input=True
                 ),
                 IO.String.Input(
                     "output_gcs_uri",
-                    default=settings.get_default_gcs_uri("video-to-video"),
+                    default=settings.get_default_gcs_uri("video-with-reference"),
                     tooltip=get_tooltip("output_gcs_uri"),
                     optional=True,
                 ),
@@ -72,18 +72,17 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
                     optional=True,
                 ),
                 IO.Combo.Input(
-                    "video_mime_type",
-                    options=settings.VideoMimeType.options(),
-                    default=settings.VideoMimeType.default(),
-                    tooltip=get_tooltip("mime_type"),
+                    "mime_type",
+                    options=settings.ImageMimeType.options(),
+                    default=settings.ImageMimeType.default(),
+                    tooltip=get_tooltip("image_mime_type"),
                     optional=True,
                 ),
                 IO.Int.Input(
                     "duration_seconds",
                     default=settings.DEFAULT_DURATION_SECONDS,
-                    min=2,
-                    max=8,
-                    step=1,
+                    min=1,
+                    max=10,
                     display_mode=IO.NumberDisplay.number,
                     tooltip=get_tooltip("duration_seconds"),
                     optional=True,
@@ -100,7 +99,6 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
                     default=24,
                     min=1,
                     max=60,
-                    step=1,
                     display_mode=IO.NumberDisplay.number,
                     tooltip=get_tooltip("fps"),
                     optional=True,
@@ -110,23 +108,12 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
                     default=1,
                     min=1,
                     max=4,
-                    step=1,
                     display_mode=IO.NumberDisplay.number,
                     tooltip=get_tooltip("number_of_videos"),
                     optional=True,
                 ),
-                IO.Boolean.Input(
-                    "enhance_prompt",
-                    default=True,
-                    tooltip=get_tooltip("enhance_prompt"),
-                    optional=True,
-                ),
-                IO.Boolean.Input(
-                    "generate_audio",
-                    default=False,
-                    tooltip=get_tooltip("generate_audio"),
-                    optional=True,
-                ),
+                IO.Boolean.Input("enhance_prompt", default=True, tooltip=get_tooltip("enhance_prompt"), optional=True),
+                IO.Boolean.Input("generate_audio", default=False, tooltip=get_tooltip("generate_audio"), optional=True),
                 IO.Combo.Input(
                     "person_generation",
                     options=settings.PersonGeneration.options(),
@@ -139,19 +126,15 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
                     default=0,
                     min=0,
                     max=2147483647,
-                    step=1,
-                    display_mode=IO.NumberDisplay.number,
                     control_after_generate=True,
+                    display_mode=IO.NumberDisplay.number,
                     tooltip=get_tooltip("seed"),
                     optional=True,
                 ),
             ],
             outputs=[
                 IO.Video.Output(
-                    id="output_videos",
-                    display_name="videos",
-                    tooltip=get_tooltip("output_videos"),
-                    is_output_list=True,
+                    id="output_videos", display_name="videos", tooltip=get_tooltip("output_videos"), is_output_list=True
                 ),
                 IO.String.Output(
                     id="output_video_path_list",
@@ -167,28 +150,29 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
     def execute(
         cls,
         prompt: str,
-        input_video_path: Optional[str],
-        negative_prompt: Optional[str],
-        output_gcs_uri: Optional[str],
+        reference_type: str,
+        output_gcs_uri: str,
         model: settings.VeoModel,
-        aspect_ratio: Optional[settings.AspectRatio],
-        video_mime_type: settings.VideoMimeType,
+        aspect_ratio: settings.AspectRatio,
+        mime_type: settings.ImageMimeType,
         duration_seconds: int,
-        resolution: Optional[settings.Resolution],
+        resolution: settings.Resolution,
         fps: int,
         seed: int,
         number_of_videos: int,
-        enhance_prompt: Optional[bool],
+        enhance_prompt: bool,
         generate_audio: bool,
         person_generation: settings.PersonGeneration,
-        video: Optional[VideoInput] = None,
+        negative_prompt: Optional[str] = None,
+        reference_image: Optional[ImageInput] = None,
+        reference_image_gcs_uri: Optional[str] = None,
     ) -> IO.NodeOutput:
-        """Modify video using a text prompt."""
-
+        """Generate video with reference image."""
         client = utils.get_genai_client()
 
         if not output_gcs_uri:
-            output_gcs_uri = settings.get_default_gcs_uri("video-to-video")
+            output_gcs_uri = settings.get_default_gcs_uri("video-with-reference")
+
         config_params = {
             "aspect_ratio": aspect_ratio,
             "duration_seconds": duration_seconds,
@@ -201,31 +185,38 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
             "compression_quality": "LOSSLESS",
             "output_gcs_uri": output_gcs_uri,
         }
+
         if negative_prompt:
             config_params["negative_prompt"] = negative_prompt
         if seed >= 0:
             config_params["seed"] = seed
 
-        try:
-            # if video
-            video_bytes = utils.bytify_video(video or input_video_path)
-            if video_bytes:
-                if video:
-                    video_mime_type = "video/mp4"
-                source_video = Video(video_bytes=video_bytes, mime_type=video_mime_type)
-            else:
-                raise ValueError("Either an input video path or an input video GCS URI must be provided.")
+        image_bytes = utils.bytify_image(reference_image)
+        ref_image = None
 
+        if image_bytes:
+            ref_image = Image(image_bytes=image_bytes, mime_type=mime_type)
+        elif reference_image_gcs_uri:
+            ref_image = Image(gcs_uri=reference_image_gcs_uri, mime_type=mime_type)
+
+        if not ref_image:
+            raise ValueError("A reference image (local upload or GCS URI) must be provided.")
+
+        ref_type_enum = VideoGenerationReferenceType[reference_type]
+        config_params["reference_images"] = [
+            VideoGenerationReferenceImage(image=ref_image, reference_type=ref_type_enum)
+        ]
+
+        try:
             operation = client.models.generate_videos(
                 model=model,
-                source=GenerateVideosSource(prompt=prompt, video=source_video),
+                source=GenerateVideosSource(prompt=prompt),
                 config=GenerateVideosConfig(**config_params),
             )
 
             result = utils.poll_operation(client, operation)
 
-            filename_prefix = "vertex-v2v"
-            videos, video_paths, previews = utils.process_genai_results(result, filename_prefix)
+            videos, video_paths, previews = utils.process_genai_results(result, "vertex-ref")
 
             return IO.NodeOutput(videos, video_paths, ui=ui.PreviewVideo(previews))
 

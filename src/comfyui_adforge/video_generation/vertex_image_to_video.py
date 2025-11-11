@@ -72,7 +72,7 @@ class VertexVeoImageToVideoNode(IO.ComfyNode):
                     "image_mime_type",
                     options=settings.ImageMimeType.options(),
                     default=settings.ImageMimeType.default(),
-                    tooltip=get_tooltip("image_mime_type"),
+                    tooltip=get_tooltip("mime_type"),
                     optional=True,
                 ),
                 IO.Int.Input(

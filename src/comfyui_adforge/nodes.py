@@ -13,6 +13,9 @@ from .video_generation.vertex_first_last_frame_to_video import (
 from .video_generation.vertex_image_to_video import VertexVeoImageToVideoNode
 from .video_generation.vertex_text_to_video import VertexVeoTextToVideoNode
 from .video_generation.vertex_video_to_video import VertexVeoVideoToVideoNode
+from .video_generation.vertex_video_with_reference import (
+    VertexVeoVideoWithReferenceNode,
+)
 
 # from .video_generation import PreviewVideo
 
@@ -258,6 +261,7 @@ NODE_CLASS_MAPPINGS = {
     "VertexVeoImageToVideoNode": VertexVeoImageToVideoNode,
     "VertexVeoFirstLastFrameToVideoNode": VertexVeoFirstLastFrameToVideoNode,
     "VertexVeoVideoToVideoNode": VertexVeoVideoToVideoNode,
+    "VertexVeoVideoWithReferenceNode": VertexVeoVideoWithReferenceNode,
     "LoadVideoGCS": LoadVideoGCS,
     # "PreviewVideo": PreviewVideo,
 }
@@ -268,6 +272,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "VertexVeoImageToVideoNode": "Vertex Veo Image to Video",
     "VertexVeoFirstLastFrameToVideoNode": "Vertex Veo First-Last Frame to Video",
     "VertexVeoVideoToVideoNode": "Vertex Veo Video to Video",
+    "VertexVeoVideoWithReferenceNode": "Vertex Veo Video with Reference",
     "LoadVideoGCS": "Load Video from GCS",
     # "PreviewVideo": "Preview Video",
 }

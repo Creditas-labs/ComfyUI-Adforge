@@ -83,14 +83,14 @@ class VertexVeoFirstLastFrameToVideoNode(IO.ComfyNode):
                     "first_frame_mime_type",
                     options=settings.ImageMimeType.options(),
                     default=settings.ImageMimeType.default(),
-                    tooltip=get_tooltip("first_frame_mime_type"),
+                    tooltip=get_tooltip("mime_type"),
                     optional=True,
                 ),
                 IO.Combo.Input(
                     "last_frame_mime_type",
                     options=settings.ImageMimeType.options(),
                     default=settings.ImageMimeType.default(),
-                    tooltip=get_tooltip("last_frame_mime_type"),
+                    tooltip=get_tooltip("mime_type"),
                     optional=True,
                 ),
                 IO.Int.Input(
