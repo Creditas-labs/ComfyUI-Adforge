@@ -91,6 +91,9 @@ INPUTS: dict[str, str] = {
     "Veo preserves the subject's appearance in the output video. Style image: You provide a single style image.  "
     "Veo applies the style from your uploaded image in the output video. This feature "
     "is only supported by veo-2.0-generate-exp in Preview.",
+    "video": "The video to process.",
+    "mask_image": "The mask defining the area of interest.",
+    "reference_image": "The image to use as a reference for content or style.",
 }
 
 TOOLTIPS = {
@@ -112,10 +115,10 @@ DOCUMENTATION = {
         "Animate static images with motion prompts using Google's Veo",
         {
             "Inputs": {
-                "prompt": get_tooltip("prompt"),
-                "negative_prompt": get_tooltip("negative_prompt"),
-                "input_image": get_tooltip("input_image"),
-                "input_image_gcs_uri": get_tooltip("input_image_gcs_uri"),
+                "prompt": INPUTS["prompt"],
+                "negative_prompt": INPUTS["negative_prompt"],
+                "input_image": INPUTS["input_image"],
+                "input_image_gcs_uri": INPUTS["input_image_gcs_uri"],
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,
@@ -126,8 +129,8 @@ DOCUMENTATION = {
         "Generate videos from text prompts using Google's Veo",
         {
             "Inputs": {
-                "prompt": get_tooltip("prompt"),
-                "negative_prompt": get_tooltip("negative_prompt"),
+                "prompt": INPUTS["prompt"],
+                "negative_prompt": INPUTS["negative_prompt"],
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,
@@ -138,8 +141,8 @@ DOCUMENTATION = {
         "Extend existing videos using a text prompt with Google's Veo.",
         {
             "Inputs": {
-                "prompt": get_tooltip("prompt"),
-                "video": "The video to extend.",
+                "prompt": INPUTS["prompt"],
+                "video": INPUTS["video"],
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,
@@ -150,8 +153,8 @@ DOCUMENTATION = {
         "Generate videos using a reference image for style guidance with Google's Veo.",
         {
             "Inputs": {
-                "prompt": get_tooltip("prompt"),
-                "reference_image": "The image to use as a reference for content or style.",
+                "prompt": INPUTS["prompt"],
+                "reference_image": INPUTS["reference_image"],
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,
@@ -162,9 +165,35 @@ DOCUMENTATION = {
         "Generate a video guided by first and last frames.",
         {
             "Inputs": {
-                "prompt": get_tooltip("prompt"),
-                "first_frame_image": "The first frame of the video.",
-                "last_frame_image": "The last frame of the video.",
+                "prompt": INPUTS["prompt"],
+                "first_frame_image": INPUTS["first_frame"],
+                "last_frame_image": INPUTS["last_frame"],
+            },
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
+        },
+    ),
+    "VertexVeoInsertContentNode": create_documentation(
+        "Insert Content",
+        "Insert new content into an existing video using a mask.",
+        {
+            "Inputs": {
+                "prompt": INPUTS["prompt"],
+                "video": INPUTS["video"],
+                "mask_image": INPUTS["mask_image"],
+            },
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
+        },
+    ),
+    "VertexVeoRemoveContentNode": create_documentation(
+        "Remove Content",
+        "Remove content from an existing video using a mask.",
+        {
+            "Inputs": {
+                "prompt": INPUTS["prompt"],
+                "video": INPUTS["video"],
+                "mask_image": INPUTS["mask_image"],
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,
